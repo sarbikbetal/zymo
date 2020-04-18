@@ -1,0 +1,65 @@
+import express from 'express';
+import socketIO from "socket.io";
+const NodeCache = require("node-cache");
+var history = require('connect-history-api-fallback');
+
+
+export default (app, http) => {
+  app.use(history());
+  app.use(express.static('./dist'));
+
+
+  const roomCache = new NodeCache({
+    stdTTL: 7200
+  });
+
+
+  app.get('/', (req, res) => {
+    res.sendFile('dist/index.html', {
+      root: __dirname
+    });
+  })
+
+  // Node-Cache stats
+  app.get('/cache-stats', (req, res) => {
+    res.json(roomCache.getStats());
+  })
+
+
+  let io = socketIO(http);
+  io.on('connection', (socket) => {
+
+    // TODO: maintain a list of hosted rooms
+    // user hosts a room
+    let isHost = false;
+    let hostID = null;
+    socket.on('host-room', (reply) => {
+      let roomID = Date.now().toString(36);
+      socket.leave(socket.id);
+      socket.join(roomID);
+      hostID = roomID;
+      isHost = true;
+      roomCache.set(roomID, true);
+      reply(roomID);
+    });
+
+    // user joins a room
+    socket.on('join-room', (roomID, reply) => {
+      socket.join(roomID);
+      reply(`${socket.id} joined ${roomID}`);
+    });
+
+    // Actual color message
+    socket.on('color', (color) => {
+      for (key in socket.rooms) {
+        io.to(key).emit('color', color);
+      }
+    });
+
+    // TODO: remove from the list of hosted rooms
+    socket.on('disconnect', () => {
+      if (isHost)
+        roomCache.del(hostID);
+    })
+  })
+}
