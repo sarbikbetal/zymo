@@ -6,11 +6,11 @@
         <h4>Let the party begin</h4>
       </div>
       <div class="flex flex-wrap mb-4 px-8">
-        <div class="w-full md:w-1/3 my-2 h-12 mx-auto">
+        <div class="w-full md:w-1/3 my-2 mx-auto">
           <HostForm />
         </div>
         <Divider />
-        <div class="w-full md:w-1/3 my-2 h-12 mx-auto">
+        <div class="w-full md:w-1/3 my-2 mx-auto">
           <JoinForm />
         </div>
       </div>

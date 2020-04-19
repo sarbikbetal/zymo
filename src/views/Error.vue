@@ -22,8 +22,6 @@ export default {
   },
   methods: {
     home() {
-      console.log("Lalapazam");
-
       this.$router.push({ name: "Home" });
     }
   }

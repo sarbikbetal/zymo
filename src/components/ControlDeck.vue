@@ -4,7 +4,7 @@
       <BrandHeader />
       <div class="flex flex-wrap mb-4 px-1 md:px-8">
         <div class="w-full md:w-1/2 my-5 h-auto mx-auto">
-          <ColorPicker />
+          <ColorPicker v-on:color="data => $emit('color', data)" />
         </div>
         <!-- <Divider /> -->
         <div class="w-full md:w-1/3 my-2 h-12 mx-auto"></div>

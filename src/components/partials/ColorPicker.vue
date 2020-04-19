@@ -1,8 +1,8 @@
 <template>
   <div id="color-picker">
-    <div :style="colorView" id="view"></div>
+    <div :style="{backgroundColor: hex}" id="view"></div>
     <div id="colors">
-      <input type="text" @input="convert" id="txt" value />
+      <input type="text" @input="convert" id="txt" v-model="hex" />
       <input
         :style="hbar"
         class="inp"
@@ -45,11 +45,20 @@
 export default {
   name: "ColorPicker",
   data: function() {
-    return { h: [], s: [], l: [], hi: 331, si: 100, li: 50 };
+    return {
+      h: [],
+      s: [],
+      l: [],
+      hi: 331,
+      si: 100,
+      li: 50,
+      hex: "#ff007b"
+    };
   },
   methods: {
     hslCalc() {
       var root = document.documentElement;
+      // Generte the gradients for the sliders
       (this.h = []), (this.s = []), (this.l = []);
       for (var i = 0; i < 360; i++) {
         this.h.push("hsl(" + (i + 1) + ", " + 100 + "%, " + 50 + "%)");
@@ -59,6 +68,7 @@ export default {
         this.l.push("hsl(" + this.hi + ", 100%, " + i + "%)");
       }
 
+      // Set the sliders
       root.style.setProperty("--color1", "hsl(" + this.hi + ", 100%, 50%)");
       root.style.setProperty(
         "--color2",
@@ -68,18 +78,52 @@ export default {
         "--color3",
         "hsl(" + this.hi + ", 100%, " + this.li + "%)"
       );
-    },
 
-    hexCalc() {
-      var str = window.getComputedStyle(view).backgroundColor;
-      str = str.replace("rgb", "");
-      str = str.replace("(", "");
-      str = str.replace(")", "");
-      str = str.split(",");
-      var hex = [0, 0, 0];
-      hex[0] = parseFloat(str[0]).toString(16);
-      hex[1] = parseFloat(str[1]).toString(16);
-      hex[2] = parseFloat(str[2]).toString(16);
+      // Get the hsl value and convert it to hex
+      let h = this.hi,
+        s = this.si / 100,
+        l = this.li / 100;
+
+      let c = (1 - Math.abs(2 * l - 1)) * s,
+        x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+        m = l - c / 2,
+        r = 0,
+        g = 0,
+        b = 0;
+
+      if (0 <= h && h < 60) {
+        r = c;
+        g = x;
+        b = 0;
+      } else if (60 <= h && h < 120) {
+        r = x;
+        g = c;
+        b = 0;
+      } else if (120 <= h && h < 180) {
+        r = 0;
+        g = c;
+        b = x;
+      } else if (180 <= h && h < 240) {
+        r = 0;
+        g = x;
+        b = c;
+      } else if (240 <= h && h < 300) {
+        r = x;
+        g = 0;
+        b = c;
+      } else if (300 <= h && h < 360) {
+        r = c;
+        g = 0;
+        b = x;
+      }
+      r = Math.round((r + m) * 255);
+      g = Math.round((g + m) * 255);
+      b = Math.round((b + m) * 255);
+
+      var hex = [r, g, b];
+      hex[0] = parseFloat(hex[0]).toString(16);
+      hex[1] = parseFloat(hex[1]).toString(16);
+      hex[2] = parseFloat(hex[2]).toString(16);
 
       if (hex[0].length < 2) hex[0] = "0" + hex[0];
       if (hex[1].length < 2) hex[1] = "0" + hex[1];
@@ -87,7 +131,7 @@ export default {
 
       hex = "#" + hex.join("");
       txt.value = hex;
-      return hex;
+      this.hex = hex;
     },
     convert(e) {
       var str = e.target.value;
@@ -96,6 +140,7 @@ export default {
       var isHex = /^[0-9A-F]{6}$/i.test(str);
 
       if (isHex) {
+        this.hex = str;
         let r = parseInt(str.slice(0, 2), 16);
         let g = parseInt(str.slice(2, 4), 16);
         let b = parseInt(str.slice(4, 6), 16);
@@ -128,22 +173,18 @@ export default {
         this.li = l;
 
         this.hslCalc();
-        //   if (socket.connected) socket.emit("color", str);
+        this.emitColor();
       }
     },
     update() {
       this.hslCalc();
-      let hex = this.hexCalc();
-
-      // if (socket.connected) socket.emit("color", hex);
+      this.emitColor();
+    },
+    emitColor() {
+      this.$emit("color", this.hex);
     }
   },
   computed: {
-    colorView: function() {
-      return (
-        "background: hsl(" + this.hi + ", " + this.si + "%, " + this.li + "%)"
-      );
-    },
     hbar: function() {
       return "background: linear-gradient(to right, " + this.h.join(", ") + ")";
     },

@@ -11,7 +11,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .brand-band {
   background: linear-gradient(210deg, #fff6b7 10%, #f6416c 100%);
   color: #fff;
@@ -20,7 +20,7 @@ export default {
   line-height: 56px;
   border-radius: 8px 8px 0 0;
   transition: all 1s;
-  opacity: 50%;
+  opacity: 0.5;
   /* z-index: 5; */
 }
 .brand-band::before {
@@ -40,11 +40,11 @@ export default {
 }
 
 @keyframes grad-opac {
-  0% {
-    opacity: 100%;
+  from {
+    opacity: 1;
   }
-  100% {
-    opacity: 0%;
+  to {
+    opacity: 0;
   }
 }
 </style>
