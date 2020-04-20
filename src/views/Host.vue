@@ -1,22 +1,55 @@
 <template>
-  <div>
-    <ControlDeck v-on:color="tx" v-on:share="share" :roomID="roomID" />
+  <div class="max-w-3xl mx-auto my-16">
+    <div class="m-2 rounded-lg overflow-hidden shadow-lg bg-white">
+      <BrandHeader />
+      <div class="flex flex-wrap px-3 md:px-8 mt-6">
+        <RoundButton @click.native="$router.push({ name: 'Home' });">
+          <img src="/img/icons/back.svg" alt="Back" />
+        </RoundButton>
+        <Pill>
+          <span class="align-middle font-medium px-3 text-gray-600" style="line-height:42px">
+            <strong>Room:</strong>
+            {{roomID}}
+          </span>
+        </Pill>
+        <RoundButton @click.native="$emit('share')">
+          <img src="/img/icons/share.svg" alt="Share" />
+        </RoundButton>
+      </div>
+      <ControlDeck
+        v-on:color="tx"
+        v-on:add="addColor"
+        v-on:share="share"
+        :roomID="roomID"
+        :colors="colors"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import ControlDeck from "@/components/ControlDeck";
+import BrandHeader from "@/components/partials/BrandHeader";
+import RoundButton from "@/components/partials/RoundButton";
+import Pill from "@/components/partials/Pill";
+
 import io from "socket.io-client";
 
-const socket = io();
+let socket = null;
 
 export default {
   name: "Host",
   data: function() {
-    return { roomID: "Loading..." };
+    return { roomID: "Loading...", colors: [] };
   },
   components: {
-    ControlDeck
+    ControlDeck,
+    BrandHeader,
+    RoundButton,
+    Pill
+  },
+  beforeMount: function() {
+    socket = io();
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -30,6 +63,9 @@ export default {
   methods: {
     tx(hex) {
       if (socket.connected) socket.emit("color", hex);
+    },
+    addColor(hex) {
+      this.colors.push({ id: Date.now(), hex: hex });
     },
     share() {
       if (navigator.share && socket.connected) {

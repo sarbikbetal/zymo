@@ -2,7 +2,12 @@
   <div id="color-picker">
     <div :style="{backgroundColor: hex}" id="view"></div>
     <div id="colors">
-      <input type="text" @input="convert" id="txt" v-model="hex" />
+      <div class="flex justify-center">
+        <InputBox class="text-center my-3" style="width: 90px" @input="convert" v-model="hex" />
+        <FlatButton class="h-8 my-4 mx-2" @click.native="addColor">
+          <img src="/img/icons/add.svg" alt="add" />
+        </FlatButton>
+      </div>
       <input
         :style="hbar"
         class="inp"
@@ -42,8 +47,15 @@
 
 
 <script>
+import InputBox from "./InputBox";
+import FlatButton from "./FlatButton";
+
 export default {
   name: "ColorPicker",
+  components: {
+    InputBox,
+    FlatButton
+  },
   data: function() {
     return {
       h: [],
@@ -130,7 +142,6 @@ export default {
       if (hex[2].length < 2) hex[2] = "0" + hex[2];
 
       hex = "#" + hex.join("");
-      txt.value = hex;
       this.hex = hex;
     },
     convert(e) {
@@ -182,6 +193,9 @@ export default {
     },
     emitColor() {
       this.$emit("color", this.hex);
+    },
+    addColor() {
+      this.$emit("add", this.hex);
     }
   },
   computed: {
@@ -275,14 +289,5 @@ input[type="range"]::-moz-range-thumb {
   background: #f2f2f2;
   box-shadow: inset 0 0 2px silver;
   border-radius: 50%;
-}
-#txt {
-  width: 90px;
-  margin: 13px 0;
-  padding: 8px;
-  border: solid 1px silver;
-  border-radius: 5px;
-  text-align: center;
-  background: #ffffff;
 }
 </style>

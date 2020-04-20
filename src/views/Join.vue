@@ -1,7 +1,5 @@
 <template>
-  <div :style="{ backgroundColor: color}">
-    <h1>Zymo client</h1>
-  </div>
+  <div :style="{ backgroundColor: color}" class="h-screen w-screen"></div>
 </template>
 
 <script>
@@ -14,13 +12,13 @@ let roomID = urlParams.get("r");
 export default {
   name: "Join",
   data: function() {
-    return { color: "#212121" };
+    return { color: "transparent" };
   },
   beforeMount: function() {
     socket.on("connect", () => {
-      socket.emit("join-room", roomID, ans => {
-        // ans is the acknowledgement and return the color
-        console.log(ans);
+      socket.emit("join-room", roomID, reply => {
+        // reply is the acknowledgement and return the color
+        console.log(reply);
       });
     });
   },

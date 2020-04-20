@@ -1,11 +1,18 @@
 import express from 'express';
 import socketIO from "socket.io";
 const NodeCache = require("node-cache");
-// var history = require('connect-history-api-fallback'); To be uninstalled
+const enforce = require('express-sslify');
 
 
 export default (app, http) => {
-  // app.use(history());
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(enforce.HTTPS({
+      trustProtoHeader: true
+    }));
+  }
+
+  console.log(process.env);
   app.use(express.static('./dist'));
 
 
