@@ -12,7 +12,6 @@ export default (app, http) => {
     }));
   }
 
-  console.log(process.env);
   app.use(express.static('./dist'));
 
 

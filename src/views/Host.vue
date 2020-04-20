@@ -12,7 +12,7 @@
             {{roomID}}
           </span>
         </Pill>
-        <RoundButton @click.native="$emit('share')">
+        <RoundButton @click.native="share">
           <img src="/img/icons/share.svg" alt="Share" />
         </RoundButton>
       </div>
