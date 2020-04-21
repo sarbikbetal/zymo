@@ -1,5 +1,8 @@
 module.exports = {
   pwa: {
-    name: 'Zymo'
+    name: 'Zymo',
+    workboxOptions: {
+      exclude: [/_redirects/]
+    }
   }
 }
