@@ -21,8 +21,18 @@ export default {
   },
   methods: {
     join() {
-      let target = "join?r=" + this.roomKey;
-      location.assign(target);
+      let id = this.roomKey;
+      if (id.length == 8) {
+        // input.classList.remove("is-primary", "is-danger");
+        // input.classList.add("is-success");
+        // document.getElementById("loader").classList.add("is-loading");
+
+        let target = "/join/" + id;
+        this.$router.push({ path: "join", query: { r: id } });
+      } else {
+        // input.classList.remove("is-primary", "is-success");
+        // input.classList.add("is-danger");
+      }
     }
   }
 };

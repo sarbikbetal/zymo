@@ -29,6 +29,28 @@ const routes = [{
   {
     path: '/join',
     name: 'Join',
+    beforeEnter: (to, from, next) => {
+      console.log(to);
+      let id = to.query.r;
+      fetch(`https://zymo.herokuapp.com/room?r=${id}`)
+        .then(res => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.exists) {
+            next();
+          } else {
+            next({
+              path: "/404"
+            });
+          }
+        }).catch((err) => {
+          console.log(err);
+          next({
+            path: "/"
+          });
+        });
+
+    },
     component: function () {
       return import( /* webpackChunkName: "about" */ '../views/Join.vue')
     },

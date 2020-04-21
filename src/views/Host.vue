@@ -40,7 +40,7 @@ let socket = null;
 export default {
   name: "Host",
   data: function() {
-    return { roomID: "Loading...", colors: [] };
+    return { roomID: "Loading...", colors: [], uid: 0 };
   },
   components: {
     ControlDeck,
@@ -49,7 +49,7 @@ export default {
     Pill
   },
   beforeMount: function() {
-    socket = io();
+    socket = io("https://zymo.herokuapp.com");
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -65,7 +65,7 @@ export default {
       if (socket.connected) socket.emit("color", hex);
     },
     addColor(hex) {
-      this.colors.push({ id: Date.now(), hex: hex });
+      this.colors.push({ id: this.uid++, hex: hex });
     },
     share() {
       if (navigator.share && socket.connected) {

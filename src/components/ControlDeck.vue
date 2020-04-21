@@ -4,7 +4,7 @@
       <ColorPicker v-on:color="emitColor" v-on:add="addColor" />
     </div>
     <!-- <Divider /> -->
-    <div class="w-full md:w-1/3 mb-2 md:my-5 h-auto mx-6 md:mx-0">
+    <div class="w-full md:w-1/2 mb-2 md:my-5 h-auto mx-6 md:mx-0 md:pl-4">
       <Palette :colors="colors" />
     </div>
   </div>

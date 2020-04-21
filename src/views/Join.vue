@@ -5,7 +5,7 @@
 <script>
 import io from "socket.io-client";
 
-const socket = io();
+const socket = io("https://zymo.herokuapp.com");
 let urlParams = new URLSearchParams(window.location.search);
 let roomID = urlParams.get("r");
 
