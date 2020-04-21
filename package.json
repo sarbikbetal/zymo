@@ -4,10 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "express": "vue-cli-service express:watch",
-    "express:run": "vue-cli-service express:run",
-    "start": "npm run express:run"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "express-sslify": "^1.2.0",
@@ -18,12 +15,11 @@
     "vue-router": "^3.1.6"
   },
   "devDependencies": {
+    "@vue/cli-plugin-pwa": "~4.3.0",
     "@vue/cli-plugin-router": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
-    "@vue/cli-plugin-pwa": "~4.3.0",
     "vue-cli-plugin-tailwind": "^1.2.0",
-    "vue-template-compiler": "^2.6.11",
-    "vue-cli-plugin-express": "^1.0.2"
+    "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
     "> 1%",
