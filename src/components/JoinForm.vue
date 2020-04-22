@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Add key modifier for enter key -->
-    <InputBox maxlength="8" v-model="roomKey" />
+    <InputBox maxlength="8" v-model="roomKey" placeholder="k9btqau7" />
     <PrimaryButton @click.native="join" text="Join party" />
   </div>
 </template>
@@ -23,15 +23,16 @@ export default {
     join() {
       let id = this.roomKey;
       if (id.length == 8) {
-        // input.classList.remove("is-primary", "is-danger");
-        // input.classList.add("is-success");
-        // document.getElementById("loader").classList.add("is-loading");
-
         let target = "/join/" + id;
         this.$router.push({ path: "join", query: { r: id } });
       } else {
-        // input.classList.remove("is-primary", "is-success");
-        // input.classList.add("is-danger");
+        this.$snack.error({
+          text: "Invalid room id",
+          button: "OK",
+          action: () => {
+            this.roomKey = "";
+          }
+        });
       }
     }
   }

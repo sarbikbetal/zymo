@@ -67,15 +67,26 @@ export default {
     addColor(hex) {
       this.colors.push({ id: this.uid++, hex: hex });
     },
+    showCopiedToast() {
+      this.$snack.success({
+        text: "Copied to clipboard",
+        button: "OK"
+      });
+    },
     share() {
-      if (navigator.share && socket.connected) {
+      if (!socket.connected) {
+        this.$snack.error({
+          text: "Please wait, room is still loading",
+          button: "OK"
+        });
+      } else if (navigator.share) {
         navigator
           .share({
             title: "ColorParty",
             text: "Come over and join my party!\n",
             url: "join?r=" + this.roomID
           })
-          .then(() => console.log("Successful share"))
+          .then(() => this.$snack.success("Link shared"))
           .catch(error => console.log("Error sharing", error));
       } else if (socket.connected) {
         let url = window.location.host + "/join?r=" + this.roomID;
@@ -88,10 +99,10 @@ export default {
         return;
       }
       navigator.clipboard.writeText(text).then(
-        function() {
-          console.log("Async: Copying to clipboard was successful!");
+        () => {
+          this.showCopiedToast();
         },
-        function(err) {
+        err => {
           console.error("Async: Could not copy text: ", err);
         }
       );
@@ -113,6 +124,7 @@ export default {
         var successful = document.execCommand("copy");
         var msg = successful ? "successful" : "unsuccessful";
         console.log("Fallback: Copying text command was " + msg);
+        this.showCopiedToast();
       } catch (err) {
         console.error("Fallback: Oops, unable to copy", err);
       }

@@ -4,5 +4,6 @@ module.exports = {
     workboxOptions: {
       exclude: [/_redirects/]
     }
-  }
+  },
+  productionSourceMap: false
 }
