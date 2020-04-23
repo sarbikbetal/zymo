@@ -47,10 +47,29 @@ const routes = [{
             path: "/"
           });
         });
-
     },
     component: function () {
       return import( /* webpackChunkName: "about" */ '../views/Join.vue')
+    },
+  },
+  {
+    path: '/spotify',
+    name: 'Spotify',
+    beforeEnter: (to, from, next) => {
+      let token = to.query.token;
+      let rf_token = to.query.rf_token;
+
+      if (token && rf_token) {
+        next();
+      } else {
+        next({
+          path: "/404"
+        });
+      }
+    },
+    props: true,
+    component: function () {
+      return import( /* webpackChunkName: "about" */ '../views/Spotify.vue')
     },
   },
   {
