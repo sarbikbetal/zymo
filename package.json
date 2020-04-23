@@ -7,8 +7,6 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "express-sslify": "^1.2.0",
-    "node-cache": "^5.1.0",
     "register-service-worker": "^1.7.1",
     "socket.io": "^2.3.0",
     "vue": "^2.6.11",
